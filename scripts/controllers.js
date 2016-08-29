@@ -5,53 +5,55 @@
 /* Controllers */
 var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
 
-    .controller('MainController', function (NgTableParams,iRoadModal, $scope,$uibModal,$log) {
+    .controller('MainController', function (NgTableParams,iRoadModal, $scope,$uibModal,$log,$interval,$timeout) {
         //$scope.offenceEvent = iRoadModal("Offence Event");
-        $scope.loading = true;
-        $scope.tableParams = new NgTableParams();
-        $scope.params ={pageSize:5};
-        $scope.programName = "Offence Event";
-        function createColumns(programStageDataElements) {
-            var cols = []
-            if (programStageDataElements){
-                programStageDataElements.forEach(function (programStageDataElement) {
-                    var filter = {};
-                    filter[programStageDataElement.dataElement.name.replace(" ","")] = 'text';
-                    cols.push({
-                        field: programStageDataElement.dataElement.name.replace(" ",""),
-                        title: programStageDataElement.dataElement.name,
-                        headerTitle: programStageDataElement.dataElement.name,
-                        show: programStageDataElement.displayInReports,
-                        filter: filter
-                    });
-                })
+        var latitude = -6.3690;
+        var longitude = 34.8888;
+        angular.extend($scope, {
+            center: {
+                lat: latitude,
+                lng: longitude,
+                zoom: 3
+            }, events: {
+                map: {
+                    enable: ['zoomstart', 'drag', 'click', 'mousemove'],
+                    logic: 'emit'
+                }
             }
-            cols.push({
-                field: "",
-                title: "Action",
-                headerTitle: "Action",
-                show: true
-            });
-            return cols;
-        }
-        $scope.getOffences = function(){
-            iRoadModal.getProgramByName($scope.programName).then(function(program){
-                $scope.program = program;
-                iRoadModal.getRelatedPrograms($scope.programName).then(function(programs){
-                    $scope.programs = programs;
-                    $scope.tableCols = createColumns(program.programStages[0].programStageDataElements);
-                    iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
-                        $scope.tableParams.settings({
-                            dataset: results
-                        });
-                        $scope.loading = false;
-                    })
+        });
+        $scope.markers = {};
+        $scope.programName = "Accident";
+        $scope.getAccidents = function(){
+            iRoadModal.getAll($scope.programName,$scope.params).then(function(results){
+                results.forEach(function(event){
+                    if(!$scope.markers[event.event]){
+                        $scope.markers[event.event] = {
+                            lat: event.coordinate.latitude,
+                            lng: event.coordinate.longitude,
+                            event:event,
+                            interval:$interval((function(eventId){
+                                return function(){
+                                    if($scope.markers[eventId].opacity == 0){
+                                        $scope.markers[eventId].opacity = 1;
+                                    }else{
+                                        $scope.markers[eventId].opacity = 0;
+                                    }
+                                }
+                            })(event.event), 1000)
+                        }
+                    }
                 })
             })
         }
-
-        $scope.getOffences();
-        $scope.showDetails = function(event){
+        $scope.$on('leafletDirectiveMarker.click', function (event, marker) {
+            $interval.cancel(marker.model.interval);
+            $scope.showDetails(marker.model.event,marker);
+        });
+        iRoadModal.getProgramByName($scope.programName).then(function(program) {
+            $scope.program = program;
+            $interval($scope.getAccidents, 1000);
+        });
+        $scope.showDetails = function(event,marker){
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/details.html',
@@ -68,6 +70,7 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
             });
 
             modalInstance.result.then(function (resultItem) {
+                $scope.markers[event.event].opacity = 1;
                 iRoadModal.setRelations(event).then(function(){
 
                 });
