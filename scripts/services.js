@@ -63,3 +63,31 @@ var appServices = angular.module('appServices', ['ngResource'])
             }
         };
     })
+    .service("TableService",function(){
+        return {
+            createColumns:function(programStageDataElements) {
+                var cols = [];
+                if (programStageDataElements){
+                    programStageDataElements.forEach(function (programStageDataElement) {
+                        var filter = {};
+                        filter[programStageDataElement.dataElement.name.replace(" ","")] = 'text';
+                        cols.push({
+                            field: programStageDataElement.dataElement.name.replace(" ",""),
+                            title: programStageDataElement.dataElement.name,
+                            headerTitle: programStageDataElement.dataElement.name,
+                            show: programStageDataElement.displayInReports,
+                            sortable: programStageDataElement.dataElement.name.replace(" ",""),
+                            filter: filter
+                        });
+                    })
+                }
+                cols.push({
+                    field: "",
+                    title: "Action",
+                    headerTitle: "Action",
+                    show: true
+                });
+                return cols;
+            }
+        }
+    })
