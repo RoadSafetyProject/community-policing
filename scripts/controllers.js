@@ -138,7 +138,7 @@ var appControllers = angular.module('appControllers', ['iroad-relation-modal'])
         dhis2.loadData = function () {
             iRoadModal.getProgramByName($scope.programName).then(function (program) {
                 $scope.program = program;
-                $interval($scope.getCommunityPolice, 1000);
+                $interval($scope.getCommunityPolice, 30000);
             });
         };
 
