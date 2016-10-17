@@ -4,7 +4,11 @@
         <button class="btn btn-default" ng-click="addFacility()">Add Facility</button>
     </div>
     <br />
-    <div class="col-sm-12">
-        <leaflet markers="markers" lf-center="center" height="700px" class="col-sm-12"></leaflet>
+    <div class="col-sm-3">
+        <c-tree ng-if="data.organisationUnits" tree-modal='data.organisationUnits' ng-model="data.selectedOrgUnit"
+                config="data.config"></c-tree>
+    </div>
+    <div class="col-sm-8">
+        <leaflet markers="markers" lf-center="center" height="600px" class="col-sm-12"></leaflet>
     </div>
 </div>

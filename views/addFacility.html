@@ -2,15 +2,18 @@
     <h3 class="modal-title">Add New Facility</h3>
 </div>
 <form ng-submit="save()">
-<div class="modal-body">
+    <div class="modal-body">
         <table ng-if="!loading" class="table">
             <tr>
                 <td>Facility Type</td>
                 <td>
                     <div class="form-group">
-                        <select class="form-control" ng-required="true" ng-model="data.organisationUnit.organisationUnitGroups[0].id">
+                        <select class="form-control" ng-required="true"
+                                ng-model="data.organisationUnit.organisationUnitGroups[0].id">
                             <option value="">Select</option>
-                            <option ng-repeat="organisationUnitGroup in data.organisationUnitGroups" value="{{organisationUnitGroup.id}}">{{organisationUnitGroup.name}}</option>
+                            <option ng-repeat="organisationUnitGroup in data.organisationUnitGroups"
+                                    value="{{organisationUnitGroup.id}}">{{organisationUnitGroup.name}}
+                            </option>
                         </select>
                     </div>
                 </td>
@@ -19,7 +22,7 @@
                 <td>Facility Name</td>
                 <td>
                     <div class="form-group">
-                        <input class="form-control" ng-required="true" ng-model="data.organisationUnit.name" />
+                        <input class="form-control" ng-required="true" ng-model="data.organisationUnit.name"/>
                     </div>
                 </td>
             </tr>
@@ -27,7 +30,8 @@
                 <td>Openning Date</td>
                 <td>
                     <div class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="data.organisationUnit.openingDate"
+                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
+                               ng-model="data.organisationUnit.openingDate"
                                is-open="date.opened" datepicker-options="date.dateOptions"
                                alt-input-formats="date.altInputFormats"/>
           <span class="input-group-btn">
@@ -38,15 +42,16 @@
                 </td>
             </tr>
             <tr>
-                <td>Coordinates</td><td>
-                <location-selector ng-location-model="event.coordinate"></location-selector>
+                <td>Coordinates</td>
+                <td>
+                    <location-selector ng-location-model="data.coordinates"></location-selector>
                 </td>
             </tr>
         </table>
-    <div ng-if="loading" class="loader"></div>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="submit" >Save</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-</div>
+        <div ng-if="loading" class="loader"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
 </form>

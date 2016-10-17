@@ -1,10 +1,14 @@
 <div class="modal-header">
-    <h3 class="modal-title">{{program.displayName}}</h3>
+    <h3 ng-if="organisationUnit" class="modal-title">{{organisationUnit.name}} Details</h3>
+    <h3 ng-if="!organisationUnit" class="modal-title">Report Details</h3>
 </div>
 <div class="modal-body">
     <table class="table">
-        <tr ng-if="!loading" ng-repeat="programStageDataElement in program.programStages[0].programStageDataElements | orderBy:'sortOrder'">
-            <td ng-if="programStageDataElement.dataElement.valueType != 'FILE_RESOURCE'">{{programStageDataElement.dataElement.name | extrapolateDataElement}}</td>
+        <tr ng-if="!loading && !organisationUnit"
+            ng-repeat="programStageDataElement in program.programStages[0].programStageDataElements | orderBy:'sortOrder'">
+            <td ng-if="programStageDataElement.dataElement.valueType != 'FILE_RESOURCE'">
+                {{programStageDataElement.dataElement.name | extrapolateDataElement}}
+            </td>
             <td ng-if="programStageDataElement.dataElement.valueType != 'FILE_RESOURCE'">
                 <div>{{event | extrapolateDataValue:programStageDataElement.dataElement.name}}</div>
 
@@ -16,7 +20,17 @@
                 </div>
             </td>
         </tr>
-        <tr ng-if="loading"><td colspan="3" align="center"><div class="loader"></div></td></tr>
+        <tbody ng-if="organisationUnit">
+        <tr>
+            <td>Name:</td>
+            <td>{{organisationUnit.name}}</td>
+        </tr>
+        </tbody>
+        <tr ng-if="loading">
+            <td colspan="3" align="center">
+                <div class="loader"></div>
+            </td>
+        </tr>
     </table>
 </div>
 <div class="modal-footer">
