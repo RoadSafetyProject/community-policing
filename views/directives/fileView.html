@@ -1,5 +1,6 @@
 <img ng-if="data.displayName.indexOf('.jpg') > -1" src="{{fileUrl}}"  class="col-sm-12"/>
-<video ng-if="data.displayName.indexOf('.mp4') > -1" class="col-sm-12" height="240" controls>
-    <source src="{{fileUrl}}" type="video/mp4">
+<video ng-if="data.displayName.indexOf('.mp4') > -1 || data.displayName.indexOf('.3gp') > -1" class="col-sm-12" height="240" controls>
+    <source ng-if="data.displayName.indexOf('.mp4') > -1" src="{{fileUrl}}" type="video/mp4">
+    <source ng-if="data.displayName.indexOf('.3gp') > -1" src="{{fileUrl}}" type="video/3gp">
     Your browser does not support the video tag.
 </video>
